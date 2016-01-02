@@ -9,6 +9,7 @@ use NetworkTester\Tests\TestInterface;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
+use Symfony\Component\Process\Process;
 
 class RunCommand extends Command
 {
@@ -62,6 +63,7 @@ class RunCommand extends Command
             do {
                 $output->write("\r" . date("Y-m-d H:i:s"));
 
+                $hasFailedTests = false;
                 $running = false;
                 foreach ($commands as $command) {
                     if ($command->getStatus() == TestInterface::STATUS_RUNNING) {
@@ -71,6 +73,8 @@ class RunCommand extends Command
                     if ($command->getStatus() == TestInterface::STATUS_FAIL) {
                         $prefix = "<error>";
                         $suffix = "</error>";
+
+                        $hasFailedTests = true;
                     } else {
                         $prefix = "";
                         $suffix = "";
@@ -82,7 +86,12 @@ class RunCommand extends Command
                 sleep(1);
             } while ($running);
 
-            // Wait at least 1 sec
+            // Play sound if tests had failed
+            if ($hasFailedTests) {
+                $this->playFailedSound();
+            }
+
+            // Wait at least 5 seconds
             $waitTime = $start + 5000 - microtime(true);
             usleep($waitTime * 1000);
 
@@ -93,5 +102,13 @@ class RunCommand extends Command
     private function getColumnWidth(TestInterface $test)
     {
         return max(strlen($test->getName()), strlen($test->getEndpoint()));
+    }
+
+    private function playFailedSound()
+    {
+        $sound = "/usr/share/sounds/freedesktop/stereo/network-connectivity-lost.oga";
+
+        $process = new Process("/usr/bin/paplay {$sound}");
+        $process->run();
     }
 }

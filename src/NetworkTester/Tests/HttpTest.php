@@ -10,7 +10,7 @@ class HttpTest extends ProcessTest
     {
         $this->url = $url;
 
-        parent::__construct("curl {$this->url}");
+        parent::__construct("curl --connect-timeout 3 {$this->url}");
     }
 
     function getName()

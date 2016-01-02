@@ -12,7 +12,7 @@ class LookupTest extends ProcessTest
         $this->domain = $domain;
         $this->server = $server;
 
-        parent::__construct("nslookup {$domain} {$server}");
+        parent::__construct("nslookup -timeout=3 {$domain} {$server}");
     }
 
     function getName()

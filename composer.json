@@ -1,0 +1,18 @@
+{
+    "name": "mburtscher/network-checker",
+    "autoload": {
+        "psr-0": {
+            "NetworkTester\\": "src/"
+        }
+    },
+    "require": {
+        "symfony/console": "^3.0",
+        "symfony/process": "^3.0"
+    },
+    "authors": [
+        {
+            "name": "Matthias Burtscher",
+            "email": "matthias.burtscher@fusonic.net"
+        }
+    ]
+}
